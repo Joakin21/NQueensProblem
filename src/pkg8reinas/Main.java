@@ -2,146 +2,54 @@
 package pkg8reinas;
 
 
-public class Main 
-{
-    int[][] tablero;
-    int N;
-    int cont=0;
-    public Main()
-    {
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import javax.swing.JFrame;
+
+
+public class Main implements KeyListener
+{  
+    private Interfaz interfaz;
+    
+    public Main(){
+        JFrame frame = new JFrame();
         
-        N = 8;
-        tablero = new int[N][N];
-        inicializarTablero();        
-        solucion(0);
-        System.out.println("Cantidad de soluciones: "+cont);
+        ProblemaReinas problema_reinas = new ProblemaReinas();//ya hace la solucion apenas se instancia
+        interfaz = new Interfaz(problema_reinas.getSoluciones());
+
+        frame.setTitle("Problema de las 8 Reinas");
+        frame.setSize(530,560);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.addKeyListener(this);
+        
+
+        frame.add(interfaz);
+        
     }
     
     public static void main(String[] args) {
-        Main ProblemaReinas = new Main();
+        Main app = new Main();
+    }   
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+       
     }
-    
-    public void solucion(int p){ //p:columna
-        if(p==N){
-            mostrarTablero();
-            cont++;
-            System.out.println();
-        }
-        else
-        {
-            for(int i=0; i<N; i++)
-            {
-                if(distintaFila(i) && distintaColumna(p) && distintaDiagonal(i,p))
-                {
-                    agregar(i,p);
-                    p++;
-                    solucion(p);
-                    p--;
-                }
-                quitar(i,p);
-            }
-        }
-    
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+       if(e.getKeyCode()==37 )//LEFT
+            interfaz.anterior();
+       if(e.getKeyCode()==39)//RIGHT
+            interfaz.siguiente();
     }
-    
-    public void inicializarTablero()
-    {
-        for(int i=0 ; i<N ; i++)
-        {
-            for(int j=0 ; j<N ; j++)
-                tablero[i][j] = 0;
-        }
-        //tablero[3][4] = 1;
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+     
     }
-    public void mostrarTablero()
-    {
-        for(int i=0 ; i<N ; i++)
-        {
-            System.out.print("[ ");
-            for(int j=0 ; j<N ; j++)
-                System.out.print(tablero[i][j]+" ");
-            System.out.print("]");
-            System.out.println();
-        }
-    }
-    //Restricciones --------------------------------------
-    public boolean distintaFila(int f)
-    {
-        boolean distFila = true;
-        int i=0;
-        while (i<N && distFila)
-        {
-            if(tablero[f][i]==1)
-                distFila = false;
-            i++;
-        }
-        return distFila;
-    }
-    public boolean distintaColumna(int c)
-    {
-        boolean distColumna = true;
-        int i=0;
-        while (i<N && distColumna)
-        {
-            if(tablero[i][c]==1)
-                distColumna = false;
-            i++;
-        }
-        return distColumna;
-    }
-    public boolean distintaDiagonal(int f, int c){
-        boolean distDiagonal = true;
-        int fi = f;
-        int ci = c;
-        //Verifico diagonal izquierda hacia arriba
-        while(f>0 && c>0 && distDiagonal)
-        {
-            f--;
-            c--;
-            if(tablero[f][c] == 1){
-                distDiagonal = false;
-            }
-        }
-        f = fi;
-        c = ci;
-        //Verifico diagonal izquierda hacia abajo(N-1 = 7)
-        while(f<N-1 && c > 0 && distDiagonal){
-            f++;
-            c--;
-            if(tablero[f][c] == 1){
-                distDiagonal = false;
-            }
-        }
-        f = fi;
-        c = ci;
-        //Verifico diagonal derecha hacia arriba
-        while(f>0 && c<N-1 && distDiagonal){
-            f--;
-            c++;
-            if(tablero[f][c] == 1){
-                distDiagonal = false;
-            }
-        }
-        f = fi;
-        c = ci;
-        //Verifico diagonal derecha hacia abajo
-        while(f<N-1 && c<N-1 && distDiagonal)
-        {
-            f++;
-            c++;
-            if(tablero[f][c] == 1){
-                distDiagonal = false;
-            }
-        }
-        
-        return distDiagonal;
-    }
-    //add and remove
-    public void agregar(int f, int c){
-        tablero[f][c] = 1;
-    }
-    public void quitar(int f, int c){
-        tablero[f][c] = 0;
-    } 
-    
+
+
 }
